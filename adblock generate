@@ -20,7 +20,7 @@ out="adblock_dns.rsc"
 host='127.0.0.1';
 
 
-grep '127.0.0.1\|0.0.0.0' $in | grep -v '^#' | awk '{ print $2 }' | sort -u | grep \. | grep -v 0\.0\.0\.0 | sed "s/^/add address=$host comment=ADBlock name=/" > ./$out
+grep '127.0.0.1\|0.0.0.0' $in | grep -v '^#' | awk '{ print $2 }' | sed $'s/\r//' | sort -u | grep \. | grep -v 0\.0\.0\.0 | sed "s/^/add address=$host comment=ADBlock name=/" | uniq -u > ./$out
 
 wc -l $out;
 
