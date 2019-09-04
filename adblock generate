@@ -9,11 +9,11 @@ src=(
 
 i=0;
 
-#for file in ${src[*]};
-#do
-#  i=$((i+1));
-#  wget --no-check-certificate -O "./hosts_list.$i" "$file";
-#done;
+for file in ${src[*]};
+do
+  i=$((i+1));
+  wget --no-check-certificate -O "./hosts_list.$i" "$file";
+done;
 
 in="./hosts_list.*"
 out="adblock_dns.rsc"
