@@ -1,4 +1,5 @@
-#!/bin/bash                                                                                                                                                                                                        src=(
+#!/bin/bash
+src=(
 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext'
 'https://hosts-file.net/ad_servers.txt'
 'http://winhelp2002.mvps.org/hosts.txt'
@@ -8,22 +9,26 @@
 
 i=0;
 
-for file in ${src[*]};
-do
-  i=$((i+1));
-  wget --no-check-certificate -O "./hosts_list.$i" "$file";
-done;
+#for file in ${src[*]};
+#do
+#  i=$((i+1));
+#  wget --no-check-certificate -O "./hosts_list.$i" "$file";
+#done;
 
 in="./hosts_list.*"
 out="adblock_dns.rsc"
 host='127.0.0.1';
 
-grep '127.0.0.1\|0.0.0.0' $in | grep -v '^#' | awk '{ print $2 }' | sort -u | grep \. | grep -v 0\.0\.0\.0 | sed "s/^/add address=$host name=/" > ./$out
+
+grep '127.0.0.1\|0.0.0.0' $in | grep -v '^#' | awk '{ print $2 }' | sort -u | grep \. | grep -v 0\.0\.0\.0 | sed "s/^/add address=$host comment=ADBlock name=/" > ./$out
 
 wc -l $out;
 
 split --lines=15000 --numeric-suffixes $out adblock_dns.rsc
 
 sed -i '1s;^;/ip dns static\n;' ./$out*
+sed -i '1s;^;/ip dns static remove [/ip dns static find comment=ADBlock]\n;' ./${out}00
+
 
 rm -f $in;
+rm -f ./$out;
